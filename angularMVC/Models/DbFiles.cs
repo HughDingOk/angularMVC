@@ -12,17 +12,14 @@ namespace angularMVC.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Order
+    public partial class DbFiles
     {
         public int Id { get; set; }
-        public System.DateTime PlaceTime { get; set; }
-        public bool Paid { get; set; }
-        public string productList { get; set; }
-        public double subTotal { get; set; }
-        public string UserID { get; set; }
-        public string ProductID { get; set; }
+        public string Name { get; set; }
+        public string MimeType { get; set; }
+        public int Size { get; set; }
+        public byte[] Content { get; set; }
     
-        public virtual User User { get; set; }
         public virtual Product Product { get; set; }
     }
 }

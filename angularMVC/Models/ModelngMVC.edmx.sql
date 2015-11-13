@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/12/2015 23:50:53
--- Generated from EDMX file: C:\Users\Ikuki\Documents\Visual Studio 2013\Projects\angularMVC\angularMVC\Models\ModelngMVC.edmx
+-- Date Created: 11/13/2015 10:06:40
+-- Generated from EDMX file: C:\Users\user\Documents\GitHub\angularMVC\angularMVC\Models\ModelngMVC.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -26,6 +26,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_ProductOrder]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[OrderSet] DROP CONSTRAINT [FK_ProductOrder];
 GO
+IF OBJECT_ID(N'[dbo].[FK_ProductDbFiles]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DbFiles] DROP CONSTRAINT [FK_ProductDbFiles];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -42,6 +45,9 @@ IF OBJECT_ID(N'[dbo].[ProductSet]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[CategorySet]', 'U') IS NOT NULL
     DROP TABLE [dbo].[CategorySet];
+GO
+IF OBJECT_ID(N'[dbo].[DbFiles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DbFiles];
 GO
 
 -- --------------------------------------------------
@@ -60,7 +66,7 @@ GO
 
 -- Creating table 'OrderSet'
 CREATE TABLE [dbo].[OrderSet] (
-    [Id] uniqueidentifier  NOT NULL,
+    [Id] int IDENTITY(1,1) NOT NULL,
     [PlaceTime] datetime  NOT NULL,
     [Paid] bit  NOT NULL,
     [productList] nvarchar(max)  NOT NULL,
@@ -68,7 +74,8 @@ CREATE TABLE [dbo].[OrderSet] (
     [UserID] nvarchar(max)  NOT NULL,
     [ProductID] nvarchar(max)  NOT NULL,
     [User_Id] int  NOT NULL,
-    [Product_Id] int  NOT NULL
+    [Product_Id] int  NOT NULL,
+    [Product_CategoryID] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -76,10 +83,10 @@ GO
 CREATE TABLE [dbo].[ProductSet] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [ProductName] nvarchar(max)  NOT NULL,
-    [ImagePath] nvarchar(max)  NOT NULL,
+    [ImageID] varbinary(max)  NOT NULL,
     [Price] float  NOT NULL,
     [Introduction] nvarchar(max)  NOT NULL,
-    [CategoryID] nvarchar(max)  NOT NULL,
+    [CategoryID] uniqueidentifier  NOT NULL,
     [Category_Id] int  NOT NULL
 );
 GO
@@ -88,6 +95,18 @@ GO
 CREATE TABLE [dbo].[CategorySet] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'DbFiles'
+CREATE TABLE [dbo].[DbFiles] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(50)  NOT NULL,
+    [MimeType] nvarchar(50)  NOT NULL,
+    [Size] int  NOT NULL,
+    [Content] varbinary(max)  NOT NULL,
+    [Product_Id] int  NULL,
+    [Product_CategoryID] uniqueidentifier  NULL
 );
 GO
 
@@ -107,15 +126,21 @@ ADD CONSTRAINT [PK_OrderSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'ProductSet'
+-- Creating primary key on [Id], [CategoryID] in table 'ProductSet'
 ALTER TABLE [dbo].[ProductSet]
 ADD CONSTRAINT [PK_ProductSet]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
+    PRIMARY KEY CLUSTERED ([Id], [CategoryID] ASC);
 GO
 
 -- Creating primary key on [Id] in table 'CategorySet'
 ALTER TABLE [dbo].[CategorySet]
 ADD CONSTRAINT [PK_CategorySet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'DbFiles'
+ALTER TABLE [dbo].[DbFiles]
+ADD CONSTRAINT [PK_DbFiles]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -153,19 +178,34 @@ ON [dbo].[OrderSet]
     ([User_Id]);
 GO
 
--- Creating foreign key on [Product_Id] in table 'OrderSet'
+-- Creating foreign key on [Product_Id], [Product_CategoryID] in table 'OrderSet'
 ALTER TABLE [dbo].[OrderSet]
 ADD CONSTRAINT [FK_ProductOrder]
-    FOREIGN KEY ([Product_Id])
+    FOREIGN KEY ([Product_Id], [Product_CategoryID])
     REFERENCES [dbo].[ProductSet]
-        ([Id])
+        ([Id], [CategoryID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_ProductOrder'
 CREATE INDEX [IX_FK_ProductOrder]
 ON [dbo].[OrderSet]
-    ([Product_Id]);
+    ([Product_Id], [Product_CategoryID]);
+GO
+
+-- Creating foreign key on [Product_Id], [Product_CategoryID] in table 'DbFiles'
+ALTER TABLE [dbo].[DbFiles]
+ADD CONSTRAINT [FK_ProductDbFiles]
+    FOREIGN KEY ([Product_Id], [Product_CategoryID])
+    REFERENCES [dbo].[ProductSet]
+        ([Id], [CategoryID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ProductDbFiles'
+CREATE INDEX [IX_FK_ProductDbFiles]
+ON [dbo].[DbFiles]
+    ([Product_Id], [Product_CategoryID]);
 GO
 
 -- --------------------------------------------------

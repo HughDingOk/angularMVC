@@ -6,12 +6,14 @@
     <edmx:Diagrams>
       <Diagram DiagramId="1cd3072508f945349455e8787484c2cc" Name="Diagram1" >
         <EntityTypeShape EntityType="ModelngMVC.User" Width="1.5" PointX="7.875" PointY="0.5" />
-        <EntityTypeShape EntityType="ModelngMVC.Order" Width="1.5" PointX="5.375" PointY="3.25" />
-        <EntityTypeShape EntityType="ModelngMVC.Product" Width="1.5" PointX="2.5" PointY="2.875" />
+        <EntityTypeShape EntityType="ModelngMVC.Order" Width="1.5" PointX="6.375" PointY="3.25" />
+        <EntityTypeShape EntityType="ModelngMVC.Product" Width="1.5" PointX="3.25" PointY="2.875" />
         <EntityTypeShape EntityType="ModelngMVC.Category" Width="1.5" PointX="1.625" PointY="0.625" />
         <AssociationConnector Association="ModelngMVC.CategoryProduct" />
         <AssociationConnector Association="ModelngMVC.UserOrder" />
         <AssociationConnector Association="ModelngMVC.ProductOrder" />
+        <EntityTypeShape EntityType="ModelngMVC.DbFiles" Width="1.5" PointX="1.125" PointY="3" />
+        <AssociationConnector Association="ModelngMVC.ProductDbFiles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
